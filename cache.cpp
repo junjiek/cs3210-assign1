@@ -4,14 +4,15 @@
 #define KB 1024
 #define MB 1024 * KB
 #define SIZE 12 * MB
-#define REPS KB * MB
+#define REPS 512 * MB // times to access/modify memory
+#define TIMES 3 // times to repeat experiment to get "average"
 
 long long wall_clock_time();
 
 int main() {
 	long long start, end;
-	float timeTaken;
 	int lengthMod;
+	float totalTime;
 	// possible cache sizes to test for
 	int sizes[] = {
 		1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
@@ -24,13 +25,16 @@ int main() {
 		lengthMod = sizes[i]/sizeof(int) - 1;
 		
 		// repeatedly access/modify data
-		start = wall_clock_time();
-		for (unsigned int j = 0; j < REPS; j++) {
-			data[(j * 16) & lengthMod]++;
+		totalTime = 0;
+		for (int j = 0; j < TIMES; j++) {
+			start = wall_clock_time();
+			for (unsigned int k = 0; k < REPS; k++) {
+				data[(k * 16) & lengthMod]++;
+			}
+			end = wall_clock_time();
+			totalTime += ((float)(end - start))/1000000000;
 		}
-		end = wall_clock_time();
-		timeTaken = ((float)(end - start))/1000000000;
-		printf("Time taken for %d k, %1.2f \n", (sizes[i] / (1 * KB)), timeTaken);
+		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
 	}
 
 	// cleanup
