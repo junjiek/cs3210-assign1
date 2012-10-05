@@ -16,12 +16,13 @@ int main() {
 	// possible cache sizes to test for
 	int sizes[] = {
 		1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
-        512 * KB, 1 * MB, 2 * MB, 3 * MB, 4 * MB, 6 * MB, 8 * MB, 10* MB, 12 * MB
+        512 * KB, 1 * MB, 2 * MB, 3 * MB, 4 * MB, 6 * MB, 8 * MB, 10 * MB, 12 * MB
 	};
 	// init large data 
-	int *data = new int[SIZE/sizeof(int)];
+	//int *data = new int[SIZE/sizeof(int)];
 	// for each possible cache size to test for
 	for (int i = 0; i < sizeof(sizes)/sizeof(int); i++) {
+		int *data = new int[SIZE/sizeof(int)];
 		lengthMod = sizes[i]/sizeof(int) - 1;
 		
 		// repeatedly access/modify data
@@ -35,10 +36,10 @@ int main() {
 			totalTime += ((float)(end - start))/1000000000;
 		}
 		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
+		delete[] data;
 	}
 
 	// cleanup
-	delete[] data;
 }
 
 /*******************************************************
@@ -49,7 +50,7 @@ long long wall_clock_time() {
 		struct timespec tp;
 		clock_gettime(CLOCK_REALTIME, &tp);
 		return (long long)(tp.tv_nsec + (long long)tp.tv_sec * 1000000000ll);
-	#else
+	#else 
 	#warning "Your timer resolution may be too low. Compile on linux"
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
