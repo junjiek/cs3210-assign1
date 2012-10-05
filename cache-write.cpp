@@ -4,9 +4,8 @@
 #define KB 1024
 #define MB 1024 * KB
 #define SIZE 12 * MB
-#define TIMES 3 // times to repeat experiment to get "average"
-#define WRITES_BASE 16 * MB // the base line, should be a small number compared to WRITES
-#define WRITES KB * MB // times to write repeatedly 
+#define WRITES_BASE 4 * MB // the base line, should be a small number compared to WRITES
+#define WRITES 32 * WRITES_BASE // times to write repeatedly 
 
 
 long long wall_clock_time();
@@ -33,7 +32,7 @@ int main() {
 
 	// for each cache level
 	for (int i = 0; i < sizeof(caches)/sizeof(int); i++) {
-		lengthMod = caches[i]/sizeof(int);
+		lengthMod = caches[i]/sizeof(int) - 1;
 
 		// record time to access once and write `WRITES_BASE` time 
 		start = wall_clock_time();
@@ -53,7 +52,7 @@ int main() {
 
 		// if average to write `WRITES_BASE` time vs `WRITES` times is about the same 
 		// (minus time to execute loop of same size), it should be a write back
-		printf("%d, %1.2f, %1.2f \n", caches[i]/1024, timeBase, timeMany);
+		printf("%d, %1.2f, %.2f (%.2f) \n", caches[i]/1024, timeBase, timeMany, timeMany/timeBase);
 	}
 
 }

@@ -19,10 +19,9 @@ int main() {
         512 * KB, 1 * MB, 2 * MB, 3 * MB, 4 * MB, 6 * MB, 8 * MB, 10 * MB, 12 * MB
 	};
 	// init large data 
-	//int *data = new int[SIZE/sizeof(int)];
+	int *data = new int[SIZE/sizeof(int)];
 	// for each possible cache size to test for
 	for (int i = 0; i < sizeof(sizes)/sizeof(int); i++) {
-		int *data = new int[SIZE/sizeof(int)];
 		lengthMod = sizes[i]/sizeof(int) - 1;
 		
 		// repeatedly access/modify data
@@ -36,10 +35,11 @@ int main() {
 			totalTime += ((float)(end - start))/1000000000;
 		}
 		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
-		delete[] data;
+		
 	}
 
 	// cleanup
+	delete[] data;
 }
 
 /*******************************************************
