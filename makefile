@@ -8,3 +8,6 @@ cache: cache.cpp
 
 cache-write: cache-write.cpp
 	g++ -O3 cache-write.cpp -o cache-write -lrt
+
+cache-l1-line: cache-l1-line.cpp
+	g++ -O3 cache-l1-line.cpp -o cache-l1-line -lrt
