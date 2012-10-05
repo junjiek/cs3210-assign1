@@ -21,7 +21,9 @@ int main() {
 	for (int s = 4; s <= MAX_STRIDE/sizeof(int); s*=2) {
 		start = wall_clock_time();
 		for (unsigned int k = 0; k < REPS; k++) {
-			data[(k * s) & lengthMod]++;
+			for (unsigned int l = 0; l < REPS; l++) {
+				data[(l * s) & lengthMod]++;
+			}	
 		}
 		end = wall_clock_time();
 		timeTaken = ((float)(end - start))/1000000000;
