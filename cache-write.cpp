@@ -3,8 +3,8 @@
 
 #define KB 1024
 #define MB 1024 * KB
-#define SIZE 12 * MB
-#define WRITES_BASE 4 * MB // the base line, should be a small number compared to WRITES
+#define SIZE 16 * MB
+#define WRITES_BASE 32 * MB // the base line, should be a small number compared to WRITES
 #define WRITES 32 * WRITES_BASE // times to write repeatedly 
 
 
@@ -15,8 +15,12 @@ int main() {
 	int lengthMod;
 	float timeBaseLoop, timeManyLoop, timeBase, timeMany;
 	int caches[] = { 16 * KB, 128 * KB, 2 * MB }; // less than size of each cache to ensure it fits 
+	int tmp;
 	// initialize large data
 	int *data = new int[SIZE/sizeof(int)];
+	int *dummy = new int[SIZE/sizeof(int)];
+	for (int i = 0; i < SIZE/sizeof(int); i++)
+		dummy[i] = i;
 
 	// record time for a loop of size `WRITES_BASE`
 	start = wall_clock_time();
@@ -39,6 +43,12 @@ int main() {
 		for (unsigned int j = 0; j < WRITES_BASE; j++) 
 			data[(j * 16) & lengthMod] = i + j;
 		end = wall_clock_time();
+
+		// force cache flush
+		tmp = 0;
+		for (unsigned int j = 0; j < WRITES; j++)
+			tmp += dummy[j & (SIZE/sizeof(int)-1)];
+
 		timeBase = ((float)(end - start))/1000000000;
 		//timeBase -= timeBaseLoop; // minus off time for loop
 
@@ -46,14 +56,23 @@ int main() {
 		start = wall_clock_time();
 		for (unsigned int j = 0; j < WRITES; j++) 
 			data[(j * 16) & lengthMod] = i + j;
+
+		// force cache flush
+		tmp = 0;
+		for (unsigned int j = 0; j < WRITES; j++)
+			tmp += dummy[j & (SIZE/sizeof(int)-1)];
+
 		end = wall_clock_time();
 		timeMany = ((float)(end - start))/1000000000;
 		//timeMany -= timeManyLoop; // minus off time for loop
 
+
 		// if average to write `WRITES_BASE` time vs `WRITES` times is about the same 
 		// (minus time to execute loop of same size), it should be a write back
-		printf("%d, %1.2f, %.2f (%.2f) \n", caches[i]/1024, timeBase, timeMany, timeMany/timeBase);
+		printf("%d, %1.2f, %.2f (%.2f) \n", caches[i]/1024, timeBase, timeMany, (timeMany/timeBase)/(WRITES/WRITES_BASE));
 	}
+
+	delete[] data;
 
 }
 

@@ -23,7 +23,7 @@ int main() {
 		for (unsigned int k = 0; k < REPS; k++) {
 			for (unsigned int l = 0; l < REPS; l++) {
 				data[(l * s) & lengthMod]++;
-			}	
+			}
 		}
 		end = wall_clock_time();
 		timeTaken = ((float)(end - start))/1000000000;
