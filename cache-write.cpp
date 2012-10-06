@@ -29,12 +29,12 @@ int main() {
 
 		start = wall_clock_time();
 
-		for (unsigned int j = 0; j < REPS; j++) 
-			data[j & lengthMod] = j;
+		for (int j = 0; j < 10; j++) 
+			tmp = 1;
 
 		// force any write back cache to flush. read from other data source
-		for (unsigned int j = 0; j < REPS; j++)
-			tmp = j;
+		for (int j = 0; j < REPS; j++)
+			tmp = dummy[(j * 16) & lengthMod];
 
 		end = wall_clock_time();
 		timeTaken = ((float)(end - start))/1000000000;
