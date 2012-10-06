@@ -34,8 +34,8 @@ int main() {
 			data[(j * 16) & lengthMod] = j;
 
 		// read from other data source to force any write back cache to flush
-		// for (int j = 0; j < REPS; j++)
-		// 	tmp = dummy[(j * 16) & lengthMod];
+		for (int j = 0; j < REPS; j++)
+		 	tmp += dummy[(j * 16) & lengthMod];
 
 		end = wall_clock_time();
 		timeTaken = ((float)(end - start))/1000000000;
