@@ -4,7 +4,7 @@
 #define KB 1024
 #define MB 1024 * KB
 #define SIZE 16 * MB
-#define REPS 128 * MB;
+#define REPS 256 * MB
 
 long long wall_clock_time();
 
@@ -29,19 +29,20 @@ int main() {
 
 		start = wall_clock_time();
 
-		for (int j = 0; j < 10; j++) 
-			tmp = 1;
+		// write to data
+		for (int j = 0; j < REPS; j++) 
+			data[(j * 16) & lengthMod] = j;
 
-		// force any write back cache to flush. read from other data source
-		for (int j = 0; j < REPS; j++)
-			tmp = dummy[(j * 16) & lengthMod];
+		// read from other data source to force any write back cache to flush
+		// for (int j = 0; j < REPS; j++)
+		// 	tmp = dummy[(j * 16) & lengthMod];
 
 		end = wall_clock_time();
 		timeTaken = ((float)(end - start))/1000000000;
 		fprintf(stderr, "%d, %1.2f \n", sizes[i]/1024, ((float)(end - start))/1000000000);
 	}
 
-	delete[] data1;
+	delete[] data;
 }
 
 /*******************************************************
