@@ -13,6 +13,7 @@ int main() {
 	long long start, end;
 	int lengthMod;
 	float totalTime;
+	unsigned long long tmp = 0;
 	// possible cache sizes to test for
 	int sizes[] = {
 		1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
@@ -20,6 +21,8 @@ int main() {
 	};
 	// init large data 
 	int *data = new int[SIZE/sizeof(int)];
+	for (int i = 0; i < SIZE/sizeof(int); i++)
+		data[i] = i;
 	// for each possible cache size to test for
 	for (int i = 0; i < sizeof(sizes)/sizeof(int); i++) {
 		lengthMod = sizes[i]/sizeof(int) - 1;
@@ -29,7 +32,7 @@ int main() {
 		for (int j = 0; j < TIMES; j++) {
 			start = wall_clock_time();
 			for (unsigned int k = 0; k < REPS; k++) {
-				data[(k * 16) & lengthMod]++;
+				tmp += (data[(k * 16) & lengthMod] & SIZE);
 			}
 			end = wall_clock_time();
 			totalTime += ((float)(end - start))/1000000000;
@@ -37,6 +40,9 @@ int main() {
 		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
 		
 	}
+
+	FILE *debug = fopen("/dev/null", "w");
+	fprintf(debug, "%d", tmp);
 
 	// cleanup
 	delete[] data;
