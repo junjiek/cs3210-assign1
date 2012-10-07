@@ -6,10 +6,10 @@
 
 #define KB 1024 // 1 KB is 1024 bytes
 #define MB 1024 * KB // 1 MB is 1024 KB
-#define SIZE 6 * MB // Size of the data array
-#define REPS 1024 * MB // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
+#define SIZE 256 * MB // Size of the data array
+#define REPS 512 * KB // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
 #define MAX_STRIDE 512 // in bytes, should be multiple of 4 (sizeof(int))
-#define TIMES 12 // times to run to get median
+#define TIMES 16 // times to run to get median
 
 long long wall_clock_time();
  
@@ -19,7 +19,7 @@ int main() {
 	int lengthMod;
 	float totalTime;
 	int tmp = 0, median, medianIndex = TIMES / 2;
-	vector<float> times(TIMES, 1.0000); 
+	vector<float> times(TIMES, 1.000000); 
 
 	int *data = new int[SIZE/sizeof(int)]; 
 	lengthMod = SIZE/sizeof(int) - 1;
@@ -31,19 +31,19 @@ int main() {
 			start = wall_clock_time();
 			for (unsigned int k = 0; k < REPS; k++) {
 				// repeatedly read the data in strides (`i`)
-				tmp += data[(k * i) & lengthMod];
+				tmp += data[(k * i)];
 			}
 			end = wall_clock_time();
 			times[j] = ((float)(end - start))/1000000000;
 		}
 		// we can expect a spike in time (more cache miss) when it exceeds the line size
 		nth_element(times.begin(), times.begin() + medianIndex, times.end());
-		printf("%d, %1.2f \n", (int)(i * sizeof(int)), times[medianIndex]);
+		printf("%d, %1.4f \n", (int)(i * sizeof(int)), times[medianIndex]);
 	}
 
 	// ensure tmp is used to prevent over-optimization
 	FILE *debug = fopen("/dev/null", "w");
-	fprintf(stdout, "%d", tmp);
+	fprintf(debug, "%d", tmp);
 
 	// cleanup
 	delete[] data;
