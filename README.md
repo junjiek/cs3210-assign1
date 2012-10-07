@@ -1,6 +1,8 @@
 CS3210 - Parallel Computing - Assignment 1
 ==========================================
 
+By Lim Jiew Meng (A0087884H)
+
 1. Cache Profiling
 ------------------
 
