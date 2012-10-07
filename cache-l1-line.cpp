@@ -3,32 +3,37 @@
 
 #define KB 1024
 #define MB 1024 * KB
-#define SIZE 32 * KB
-#define REPS 512 * MB // times to access/modify memory
+#define SIZE 4 * MB
+#define REPS 256 * MB // times to access/modify memory
 #define MAX_STRIDE 512 // in bytes, should be multiple of 4 (sizeof(int))
+#define TIMES 6 // times to run to get average
 
 long long wall_clock_time();
  
 int main() {
 	long long start, end;
 	int lengthMod;
-	float timeTaken;
+	float totalTime = 0;
+	int tmp = 0;
 
 	int *data = new int[SIZE/sizeof(int)]; 
 	lengthMod = SIZE/sizeof(int) - 1;
 
 	// repeatedly access/modify data, varying the STRIDE
-	for (int s = 4; s <= MAX_STRIDE/sizeof(int); s*=2) {
-		start = wall_clock_time();
-		for (unsigned int k = 0; k < REPS; k++) {
-			for (unsigned int l = 0; l < REPS; l++) {
-				data[(l * s) & lengthMod]++;
+	for (int i = 4; i <= MAX_STRIDE; i*=2) {
+		for (int j = 0; j < TIMES; j++) {
+			start = wall_clock_time();
+			for (unsigned int k = 0; k < REPS; k++) {
+				tmp += data[(k * (i/sizeof(int))) & lengthMod];
 			}
+			end = wall_clock_time();
+			totalTime += ((float)(end - start))/1000000000;
 		}
-		end = wall_clock_time();
-		timeTaken = ((float)(end - start))/1000000000;
-		printf("%d, %1.2f \n", s * sizeof(int), timeTaken);
+		printf("%d, %1.2f \n", i, totalTime/TIMES);
 	}
+
+	FILE *debug = fopen("/dev/null", "w");
+	fprintf(debug, "%d", tmp);
 
 	// cleanup
 	delete[] data;
