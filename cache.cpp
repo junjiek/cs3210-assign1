@@ -45,7 +45,7 @@ int main() {
 
 	// ensure tmp is used ... otherwise compiler optimization seems to optimize too much
 	FILE *debug = fopen("/dev/null", "w");
-	fprintf(debug, "%d", tmp);
+	fprintf(debug, "%d", (int)tmp);
 
 	// cleanup
 	delete[] data;
