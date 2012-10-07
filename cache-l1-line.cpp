@@ -13,27 +13,28 @@ long long wall_clock_time();
 int main() {
 	long long start, end;
 	int lengthMod;
-	float totalTime = 0;
+	float totalTime;
 	int tmp = 0;
 
 	int *data = new int[SIZE/sizeof(int)]; 
 	lengthMod = SIZE/sizeof(int) - 1;
 
 	// repeatedly access/modify data, varying the STRIDE
-	for (int i = 4; i <= MAX_STRIDE; i*=2) {
+	for (int i = 4; i <= MAX_STRIDE/sizeof(int); i*=2)  {
+		totalTime = 0;
 		for (int j = 0; j < TIMES; j++) {
 			start = wall_clock_time();
 			for (unsigned int k = 0; k < REPS; k++) {
-				tmp += data[(k * (i/sizeof(int))) & lengthMod];
+				tmp += data[(k * i) & lengthMod];
 			}
 			end = wall_clock_time();
 			totalTime += ((float)(end - start))/1000000000;
 		}
-		printf("%d, %1.2f \n", i, totalTime/TIMES);
+		printf("%d, %1.2f \n", i * sizeof(int), totalTime/TIMES);
 	}
 
 	FILE *debug = fopen("/dev/null", "w");
-	fprintf(debug, "%d", tmp);
+	fprintf(stdout, "%d", tmp);
 
 	// cleanup
 	delete[] data;
