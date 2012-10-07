@@ -19,7 +19,7 @@ int main() {
 	int *data = new int[SIZE/sizeof(int)]; 
 	lengthMod = SIZE/sizeof(int) - 1;
 
-	// repeatedly access/modify data, varying the STRIDE
+	// repeatedly access/modify data, varying the STRIDE (i)
 	for (int i = 4; i <= MAX_STRIDE/sizeof(int); i*=2)  {
 		totalTime = 0;
 		for (int j = 0; j < TIMES; j++) {
@@ -33,6 +33,7 @@ int main() {
 		printf("%d, %1.2f \n", i * sizeof(int), totalTime/TIMES);
 	}
 
+	// ensure tmp is used to prevent over-optimization
 	FILE *debug = fopen("/dev/null", "w");
 	fprintf(stdout, "%d", tmp);
 

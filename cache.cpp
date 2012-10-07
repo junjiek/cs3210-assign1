@@ -27,7 +27,7 @@ int main() {
 	for (int i = 0; i < sizeof(sizes)/sizeof(int); i++) {
 		lengthMod = sizes[i]/sizeof(int) - 1;
 		
-		// repeatedly access/modify data
+		// repeatedly read data
 		totalTime = 0;
 		for (int j = 0; j < TIMES; j++) {
 			start = wall_clock_time();
@@ -38,9 +38,9 @@ int main() {
 			totalTime += ((float)(end - start))/1000000000;
 		}
 		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
-		
 	}
 
+	// ensure tmp is used ... otherwise compiler optimization seems to optimize too much
 	FILE *debug = fopen("/dev/null", "w");
 	fprintf(debug, "%d", tmp);
 

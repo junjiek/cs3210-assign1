@@ -1,4 +1,4 @@
-all: matrix cache cache-write
+all: matrix cache cache-write cache-l1-line
 
 matrix: matrix.cpp
 	g++ -O3 -msse3 -fstrict-aliasing matrix.cpp -o matrix -lrt
