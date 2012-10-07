@@ -1,10 +1,10 @@
 #include <stdio.h> 
 #include <time.h>
 
-#define KB 1024
-#define MB 1024 * KB
-#define SIZE 12 * MB
-#define REPS 512 * MB // times to access/modify memory
+#define KB 1024 // 1 KB = 1024 bytes
+#define MB 1024 * KB // 1 MB = 1024 KB
+#define SIZE 14 * MB // size of data array
+#define REPS 512 * MB // times to access memory (MB/KB just used as millions/thousands multiplier)
 #define TIMES 3 // times to repeat experiment to get "average"
 
 long long wall_clock_time();
@@ -19,7 +19,7 @@ int main() {
 		1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
         512 * KB, 1 * MB, 2 * MB, 3 * MB, 4 * MB, 6 * MB, 8 * MB, 10 * MB, 12 * MB
 	};
-	// init large data 
+	// init data 
 	int *data = new int[SIZE/sizeof(int)];
 	for (int i = 0; i < SIZE/sizeof(int); i++)
 		data[i] = i;
@@ -32,11 +32,14 @@ int main() {
 		for (int j = 0; j < TIMES; j++) {
 			start = wall_clock_time();
 			for (unsigned int k = 0; k < REPS; k++) {
-				tmp += (data[(k * 16) & lengthMod] & SIZE);
+				// *16 to write to new cache line as much as possible
+				// & lengthMod == % sizes[i]/sizeof(int)
+				tmp += (data[(k * 16) & lengthMod]);
 			}
 			end = wall_clock_time();
 			totalTime += ((float)(end - start))/1000000000;
 		}
+		// where theres a spike in time --> new level of cache
 		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
 	}
 

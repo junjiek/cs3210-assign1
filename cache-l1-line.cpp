@@ -1,10 +1,10 @@
 #include <stdio.h> 
 #include <time.h>
 
-#define KB 1024
-#define MB 1024 * KB
-#define SIZE 4 * MB
-#define REPS 256 * MB // times to access/modify memory
+#define KB 1024 // 1 KB is 1024 bytes
+#define MB 1024 * KB // 1 MB is 1024 KB
+#define SIZE 4 * MB // Size of the data array
+#define REPS 256 * MB // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
 #define MAX_STRIDE 512 // in bytes, should be multiple of 4 (sizeof(int))
 #define TIMES 6 // times to run to get average
 
@@ -25,11 +25,13 @@ int main() {
 		for (int j = 0; j < TIMES; j++) {
 			start = wall_clock_time();
 			for (unsigned int k = 0; k < REPS; k++) {
+				// repeatedly read the data in strides (`i`)
 				tmp += data[(k * i) & lengthMod];
 			}
 			end = wall_clock_time();
 			totalTime += ((float)(end - start))/1000000000;
 		}
+		// we can expect a spike in time (more cache miss) when it exceeds the line size
 		printf("%d, %1.2f \n", (int)(i * sizeof(int)), totalTime/TIMES);
 	}
 

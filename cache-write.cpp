@@ -1,10 +1,10 @@
 #include <stdio.h> 
 #include <time.h>
 
-#define KB 1024
-#define MB 1024 * KB
-#define SIZE 16 * MB
-#define REPS 256 * MB
+#define KB 1024 // 1 KB = 1024 bytes
+#define MB 1024 * KB // 1 MB = 1024 KB
+#define SIZE 16 * MB // size of data array
+#define REPS 256 * MB // number time times to write
 
 long long wall_clock_time();
 
