@@ -3,9 +3,9 @@
 
 #define KB 1024 // 1 KB = 1024 bytes
 #define MB 1024 * KB // 1 MB = 1024 KB
-#define SIZE 14 * MB // size of data array
-#define REPS 512 * MB // times to access memory (MB/KB just used as millions/thousands multiplier)
-#define TIMES 3 // times to repeat experiment to get "average"
+#define SIZE 12 * MB // size of data array
+#define REPS 1024 * MB // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
+#define TIMES 6 // times to repeat experiment to get "average"
 
 long long wall_clock_time();
 
@@ -13,7 +13,6 @@ int main() {
 	long long start, end;
 	int lengthMod;
 	float totalTime;
-	unsigned long long tmp = 0;
 	// possible cache sizes to test for
 	int sizes[] = {
 		1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
@@ -21,20 +20,18 @@ int main() {
 	};
 	// init data 
 	int *data = new int[SIZE/sizeof(int)];
-	for (int i = 0; i < SIZE/sizeof(int); i++)
-		data[i] = i;
 	// for each possible cache size to test for
 	for (int i = 0; i < sizeof(sizes)/sizeof(int); i++) {
-		lengthMod = sizes[i]/sizeof(int) - 1;
+		lengthMod = sizes[i] - 1;
 		
 		// repeatedly read data
 		totalTime = 0;
 		for (int j = 0; j < TIMES; j++) {
 			start = wall_clock_time();
 			for (unsigned int k = 0; k < REPS; k++) {
-				// *16 to write to new cache line as much as possible
+				// *16 to read to new cache line as much as possible
 				// & lengthMod == % sizes[i]/sizeof(int)
-				tmp += (data[(k * 16) & lengthMod]);
+				data[(k * 16) & (lengthMod/sizeof(int))]++;
 			}
 			end = wall_clock_time();
 			totalTime += ((float)(end - start))/1000000000;
@@ -42,10 +39,6 @@ int main() {
 		// where theres a spike in time --> new level of cache
 		printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
 	}
-
-	// ensure tmp is used ... otherwise compiler optimization seems to optimize too much
-	FILE *debug = fopen("/dev/null", "w");
-	fprintf(debug, "%d", (int)tmp);
 
 	// cleanup
 	delete[] data;
