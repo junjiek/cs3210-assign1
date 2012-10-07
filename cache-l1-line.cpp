@@ -6,7 +6,7 @@
 
 #define KB 1024 // 1 KB is 1024 bytes
 #define MB 1024 * KB // 1 MB is 1024 KB
-#define SIZE 16 * MB // Size of the data array
+#define SIZE 8 * MB // Size of the data array
 #define REPS 512 * MB // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
 #define MAX_STRIDE 512 // in bytes, should be multiple of 4 (sizeof(int))
 #define TIMES 6 // times to run to get median
@@ -19,7 +19,7 @@ int main() {
 	int lengthMod;
 	float totalTime;
 	int tmp = 0, median, medianIndex = TIMES / 2;
-	vector<float> times(TIMES, 1.00000000); 
+	vector<float> times(TIMES, 1.0000); 
 
 	int *data = new int[SIZE/sizeof(int)]; 
 	lengthMod = SIZE/sizeof(int) - 1;
@@ -34,6 +34,7 @@ int main() {
 				tmp += data[(k * i) & lengthMod];
 			}
 			end = wall_clock_time();
+			times[j] = ((float)(end - start))/1000000000;
 		}
 		// we can expect a spike in time (more cache miss) when it exceeds the line size
 		nth_element(times.begin(), times.begin() + medianIndex, times.end());
