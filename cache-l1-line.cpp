@@ -30,7 +30,7 @@ int main() {
 			end = wall_clock_time();
 			totalTime += ((float)(end - start))/1000000000;
 		}
-		printf("%d, %1.2f \n", i * sizeof(int), totalTime/TIMES);
+		printf("%d, %1.2f \n", (int)(i * sizeof(int)), totalTime/TIMES);
 	}
 
 	// ensure tmp is used to prevent over-optimization
