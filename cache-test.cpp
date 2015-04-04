@@ -1,5 +1,5 @@
 #include <stdio.h> 
-#include <time.h>
+#include <sys/time.h>
 
 #define KB 1024 // 1 KB = 1024 bytes
 #define MB 1024 * KB // 1 MB = 1024 KB
@@ -53,7 +53,7 @@ long long wall_clock_time() {
 		clock_gettime(CLOCK_REALTIME, &tp);
 		return (long long)(tp.tv_nsec + (long long)tp.tv_sec * 1000000000ll);
 	#else 
-	#warning "Your timer resolution may be too low. Compile on linux"
+	// #warning "Your timer resolution may be too low. Compile on linux"
 		struct timeval tv;
 		gettimeofday(&tv, NULL);
 		return (long long)(tv.tv_usec * 1000 + (long long)tv.tv_sec * 1000000000ll);

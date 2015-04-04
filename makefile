@@ -3,8 +3,8 @@ all: matrix cache cache-write cache-l1-line
 matrix: matrix.cpp
 	g++ -O3 -msse3 -fstrict-aliasing matrix.cpp -o matrix -lrt
 
-cache: cache.cpp
-	g++ -O3 cache.cpp -o cache -lrt
+cache-test: cache-test.cpp
+	g++ -O3 cache-test.cpp -o cache-test
 
 cache-write: cache-write.cpp
 	g++ -O3 cache-write.cpp -o cache-write -lrt
