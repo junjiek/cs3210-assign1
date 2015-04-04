@@ -2,11 +2,11 @@
 #include <time.h>
 #include <cstdlib>
 
-#define KB 1024       // 1 KB = 1024 bytes
-#define MB 1024 * KB  // 1 MB = 1024 KB
-#define STRIDE 64     // 64 bytes = cache line size
-#define REPS 1000000  // times to access/modify memory
-#define TIMES 5       // times to repeat experiment to get "average"
+#define KB 1024         // 1 KB = 1024 bytes
+#define MB 1024 * KB    // 1 MB = 1024 KB
+#define MAX_STRIDE 512 // in bytes, should be multiple of 4 (sizeof(int))
+#define REPS 1000000    // times to access/modify memory
+#define TIMES 5         // times to repeat experiment to get "average"
 
 int main() {
     long long start, end;
@@ -26,15 +26,13 @@ int main() {
         for (int i = 0; i < size; i++) {
             array[i] = i;
         }
-        int stride_int = STRIDE/sizeof(int);
         for (int i = size - 1; i >= 0; i--) {
-            if (i < stride_int) continue;
-            int j = rand()%(i/stride_int) * stride_int + i%stride_int;
+            if (i < STRIDE) continue;
+            int j = rand()%(i/STRIDE) * STRIDE + i%STRIDE;
             int tmp = array[i];
             array[i] = array[j];
             array[j] = tmp;
         }
-
         int index = array[rand() % size];
         // 多次读取数据
         totalTime = 0;
@@ -49,8 +47,8 @@ int main() {
             totalTime += ((float)(end - start))/1000;
         }
         // 跳变处即为new level cache
-        // printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
-        printf("%1.2f \n", totalTime / TIMES);
+        printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
+        // printf("%1.2f \n", totalTime / TIMES);
         // cleanup
         delete[] array;
     }

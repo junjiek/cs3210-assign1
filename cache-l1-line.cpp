@@ -4,12 +4,12 @@
 #include <vector>
 #include <algorithm>
 
-#define KB 1024 // 1 KB is 1024 bytes
-#define MB 1024 * KB // 1 MB is 1024 KB
-#define SIZE 8 * MB // Size of the data array
-#define REPS 512 * MB // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
+#define KB 1024 	   // 1 KB is 1024 bytes
+#define MB 1024 * KB   // 1 MB is 1024 KB
+#define SIZE 8 * MB    // Size of the data array
+#define REPS 512 * MB  // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
 #define MAX_STRIDE 512 // in bytes, should be multiple of 4 (sizeof(int))
-#define TIMES 6 // times to run to get median
+#define TIMES 6        // times to run to get median
 
 long long wall_clock_time();
  
