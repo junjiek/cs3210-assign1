@@ -14,3 +14,7 @@ cache-write: cache-write.cpp
 
 cache-l1-line: cache-l1-line.cpp
 	g++ -O3 cache-l1-line.cpp -o cache-l1-line 
+
+
+cache-line: cache-line.cpp
+	g++ cache-line.cpp -o cache-line 
