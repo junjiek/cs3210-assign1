@@ -1,11 +1,11 @@
 #include <stdio.h> 
-#include <sys/time.h>
+#include <time.h>
 #include <cstdlib>
 
 #define KB 1024         // 1 KB = 1024 bytes
 #define MB 1024 * KB    // 1 MB = 1024 KB
-#define STRIDE 64       // 64 bytes
-#define REPS 1024 * MB  // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
+#define STRIDE 64       // 64 bytes = cache line size
+#define REPS 1000000  // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
 #define TIMES 6         // times to repeat experiment to get "average"
 long long wall_clock_time();
 
@@ -35,38 +35,23 @@ int main() {
             array[j] = tmp;
         }
         int index = array[rand() % size];
-        // repeatedly read data
+        // 多次读取数据
         totalTime = 0;
         for (int j = 0; j < TIMES; j++) {
-            start = wall_clock_time();
+            start = clock();
             for (unsigned int k = 0; k < REPS/3; k++) {
                 index = array[index];
                 index = array[index];
                 index = array[index];
             }
-            end = wall_clock_time();
-            totalTime += ((float)(end - start))/1000000000;
+            end = clock();
+            totalTime += ((float)(end - start))/1000;
         }
-        // where theres a spike in time --> new level of cache
-        printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
+        // 跳变处即为new level cache
+        // printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
+        printf("%1.2f \n", totalTime / TIMES);
         // cleanup
         delete[] array;
     }
 
-}
-
-/*******************************************************
- * Helpers
- ******************************************************/
-long long wall_clock_time() {
-    #ifdef __linux__
-        struct timespec tp;
-        clock_gettime(CLOCK_REALTIME, &tp);
-        return (long long)(tp.tv_nsec + (long long)tp.tv_sec * 1000000000ll);
-    #else 
-    // #warning "Your timer resolution may be too low. Compile on linux"
-        struct timeval tv;
-        gettimeofday(&tv, NULL);
-        return (long long)(tv.tv_usec * 1000 + (long long)tv.tv_sec * 1000000000ll);
-    #endif
 }
