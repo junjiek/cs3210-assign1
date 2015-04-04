@@ -6,8 +6,8 @@ matrix: matrix.cpp
 cache-test: cache-test.cpp
 	g++ -O3 cache-test.cpp -o cache-test
 
-cache-test2: cache-test-2.cpp
-	g++ -O3 cache-test-2.cpp -o cache-test-2
+cache-test-2: cache-test-2.cpp
+	g++ cache-test-2.cpp -o cache-test-2
 
 cache-write: cache-write.cpp
 	g++ -O3 cache-write.cpp -o cache-write

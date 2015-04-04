@@ -1,10 +1,10 @@
 #include <stdio.h> 
 #include <sys/time.h>
+#include <cstdlib>
 
 #define KB 1024         // 1 KB = 1024 bytes
 #define MB 1024 * KB    // 1 MB = 1024 KB
-#define SIZE 12 * MB    // size of data array
-#define STRIDE 32 * KB  // 
+#define STRIDE 64       // 64 bytes
 #define REPS 1024 * MB  // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
 #define TIMES 6         // times to repeat experiment to get "average"
 long long wall_clock_time();
@@ -18,37 +18,41 @@ int main() {
         1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
         512 * KB, 1 * MB, 2 * MB, 3 * MB, 4 * MB, 6 * MB, 8 * MB, 10 * MB, 12 * MB
     };
-
-    // init data 
-    void *data = new int[SIZE/sizeof(int)] = {NULL};
-    for (int i = 0; i < SIZE/sizeof(int); i++) {
-        array[i] = &array[i];
-    }
-    for (int i = SIZE - 1; i >= 0; i--) {
-        if()
-    }
+   
     // 测试每个可能的的Cache大小
     for (int i = 0; i < sizeof(sizes)/sizeof(int); i++) {
-        lengthMod = sizes[i] - 1;
-        
+        int size = sizes[i]/sizeof(int);
+        // 初始化
+        int* array = new int[size];
+        for (int i = 0; i < size; i++) {
+            array[i] = i;
+        }
+        for (int i = size - 1; i >= 0; i--) {
+            if (i < STRIDE) continue;
+            int j = rand()%(i/STRIDE) * STRIDE + i%STRIDE;
+            int tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
+        }
+        int index = array[rand() % size];
         // repeatedly read data
         totalTime = 0;
         for (int j = 0; j < TIMES; j++) {
             start = wall_clock_time();
-            for (unsigned int k = 0; k < REPS; k++) {
-                // *16 to read to new cache line as much as possible
-                // & lengthMod == % sizes[i]/sizeof(int)
-                data[(k * 16) & (lengthMod/sizeof(int))]++;
+            for (unsigned int k = 0; k < REPS/3; k++) {
+                index = array[index];
+                index = array[index];
+                index = array[index];
             }
             end = wall_clock_time();
             totalTime += ((float)(end - start))/1000000000;
         }
         // where theres a spike in time --> new level of cache
         printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
+        // cleanup
+        delete[] array;
     }
 
-    // cleanup
-    delete[] data;
 }
 
 /*******************************************************
