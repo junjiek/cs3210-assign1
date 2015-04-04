@@ -42,7 +42,7 @@ int main() {
 	}
 
 	// ensure tmp is used to prevent over-optimization
-	FILE *debug = fopen("/dev/null", "w");
+	FILE *debug = fopen("./null", "w");
 	fprintf(debug, "%d", tmp);
 
 	// cleanup

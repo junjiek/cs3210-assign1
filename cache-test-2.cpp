@@ -5,9 +5,8 @@
 #define KB 1024         // 1 KB = 1024 bytes
 #define MB 1024 * KB    // 1 MB = 1024 KB
 #define STRIDE 64       // 64 bytes = cache line size
-#define REPS 1000000  // times to access/modify memory (MB/KB just used as millions/thousands multiplier)
-#define TIMES 6         // times to repeat experiment to get "average"
-long long wall_clock_time();
+#define REPS 1000000    // times to access/modify memory
+#define TIMES 5         // times to repeat experiment to get "average"
 
 int main() {
     long long start, end;
@@ -48,8 +47,8 @@ int main() {
             totalTime += ((float)(end - start))/1000;
         }
         // 跳变处即为new level cache
-        // printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
-        printf("%1.2f \n", totalTime / TIMES);
+        printf("%d, %1.2f \n", (sizes[i] / (1 * KB)), totalTime / TIMES);
+        // printf("%1.2f \n", totalTime / TIMES);
         // cleanup
         delete[] array;
     }
