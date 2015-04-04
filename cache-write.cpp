@@ -1,5 +1,5 @@
 #include <stdio.h> 
-#include <time.h>
+#include <sys/time.h>
 
 #define KB 1024 // 1 KB = 1024 bytes
 #define MB 1024 * KB // 1 MB = 1024 KB

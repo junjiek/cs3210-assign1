@@ -13,7 +13,7 @@ int main() {
 	long long start, end;
 	int lengthMod;
 	float totalTime;
-	// possible cache sizes to test for
+	// 可能的Cache大小
 	int sizes[] = {
 		1 * KB, 4 * KB, 8 * KB, 16 * KB, 32 * KB, 64 * KB, 128 * KB, 256 * KB, 
         512 * KB, 1 * MB, 2 * MB, 3 * MB, 4 * MB, 6 * MB, 8 * MB, 10 * MB, 12 * MB

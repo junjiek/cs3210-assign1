@@ -5,6 +5,8 @@
 #include <cstdio>
 #include <stdlib.h>
 #include <x86intrin.h>
+#include <sys/time.h>
+
 using namespace std;
 
 long long wall_clock_time();
