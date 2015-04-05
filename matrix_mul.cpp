@@ -1,7 +1,19 @@
-#include   <iostream>   
-#include   <vector>
+#include <iostream>   
+#include <vector>
 #include <time.h>
-using   namespace   std;   
+using namespace std;   
+
+void transpose_matrix(int b[][1000]) {
+	for (int i = 0 ; i < 1000 ; i++) {
+		for (int j = 0; j < 1000; j++) {
+			int tmp = b[i][j];
+			b[i][j] = b[j][i];
+			b[j][i] = tmp;
+		}
+	}
+	return;
+}
+
 
 int main()
 {
@@ -50,22 +62,25 @@ int main()
 
 	//可以修改的部分  开始
 	//======================================================
-	for(i = 0; i < 1000; i++)
-	{
-		for(j = 0; j < 1000; j++)
-		{
-			for (k = 0; k < 1000; k++)
-			{
-				d[i][j] += a[i][k] * b[k][j];
-			}
 
+	int N = 1000;
+	int B = 62;
+	for ( int jj = 0; jj < N; jj = jj+B) {
+		for ( int kk = 0; kk < N; kk = kk+B) {
+			for ( int i = 0; i < N; i++) {
+				for ( int j = jj; j < min(jj+B, N); j++) { 
+					int r = 0; 
+					for ( k = kk; k < min(kk+B, N); k++) {
+						r = r + a[ i ][ k ] * b[ k ][ j ]; 
+					}
+					d[ i ][ j ] = d[ i ][ j ] + r;
+				} 
+			}
 		}
 	}
-	//可以修改的部分   结束
-	//======================================================
+	// 可以修改的部分   结束
+	// ======================================================
 	finish1 = clock();
-
-
 
 	//对比两次的结果
 	for(i = 0; i < 1000; i++)
@@ -74,7 +89,7 @@ int main()
 		{
 			if (c[i][j] != d[i][j])
 			{
-				cout<<"you have got an error in algorithm modification!"<<endl;
+				cout<< i << ", " << j << " : you have got an error in algorithm modification!"<<endl;
 				exit(1);
 			}
 

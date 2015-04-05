@@ -4,8 +4,8 @@
 
 #define KB 1024         // 1 KB = 1024 bytes
 #define MB 1024 * KB    // 1 MB = 1024 KB
-#define SIZE 8 * MB     // Size of the data array
-#define MAX_STRIDE 512  // in bytes, should be multiple of 4 (sizeof(int))
+#define SIZE 64 * KB    // Size of the data array
+#define MAX_STRIDE 256  // in bytes, should be multiple of 4 (sizeof(int))
 #define REPS 1000000    // times to access/modify memory
 #define TIMES 5         // times to repeat experiment to get "average"
 

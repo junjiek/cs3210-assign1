@@ -117,6 +117,7 @@ int main() {
 	// do matrix multiply
 	matrix_multiply_simd(m1, m2, result_optimized);
 	matrix_multiply_unoptimized(m1, m2, result_unoptimized);
+	matrix_multiply_optimized(m1, m2, result_unoptimized);
 
 	// print result
 	int wrong = 0;

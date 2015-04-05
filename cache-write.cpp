@@ -42,7 +42,7 @@ int main() {
 		fprintf(stderr, "%d, %1.2f \n", sizes[i]/1024, ((float)(end - start))/1000000000);
 	}
 
-	FILE *debug = fopen("/dev/null", "w");
+	FILE *debug = fopen("1.txt", "w");
 	fprintf(debug, "%d", tmp);
 
 	delete[] data;
